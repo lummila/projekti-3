@@ -16,7 +16,7 @@ class Led:
         self._pwm = PWM(self._pin)
         self._pwm.freq(1000)
         self.brightness(brightness)
-        if value != None:
+        if value is not None:
             self.value(value)
         
     def on(self):
@@ -44,8 +44,10 @@ class Led:
             if len(args) > 1:
                 raise TypeError("Too many arguments. Only one argument allowed")
             elif len(args):
-                if args[0]: self.on()
-                else: self.off()
+                if args[0]:
+                    self.on()
+                else:
+                    self.off()
             else:
                 if self._pwm.duty_u16():
                     return 1
