@@ -10,11 +10,13 @@ SCREEN_HEIGHT = 64
 
 TEXT_HEIGHT = 8
 
-# Breaking point
-SCROLL_ROW = TEXT_HEIGHT + 2
-
 # Bottom breaking point
 BOTTOM_BREAK = int(SCREEN_HEIGHT - SCROLL_ROW / 2)
+
+# One row
+ROW = TEXT_HEIGHT + 2
+# Last row
+LAST_ROW = ROW * 5
 
 
 class Screen:
@@ -23,15 +25,18 @@ class Screen:
         self.i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
         self.display = SSD1306_I2C(SCREEN_WIDTH, SCREEN_HEIGHT, self.i2c)
 
-    def draw_text(self, text):
-        # Before drawing anything, scroll one row up
-        self.display.scroll(0, SCROLL_ROW)
-        # Clear first row
-        self.display.fill_rect(0, 0, SCREEN_WIDTH, SCROLL_ROW, 0)
-        # Clear bottom, or it looks ugly
-        self.display.fill_rect(0, BOTTOM_BREAK, SCREEN_WIDTH, SCROLL_ROW, 0)
+        # Row counter
+        self.scroll_row = 0
 
-        self.display.text(text, 0, 0, 1)
+    def draw_text(self, text):
+        if self.scroll_row < (TEXT_HEIGHT + 2) * 6:
+            self.display.text(text, 0, self.scroll_row, 1)
+
+            self.scroll_row += ROW
+        else:
+            self.display.scroll(0, -ROW)
+            self.display.fill_rect(0, LAST_ROW, SCREEN_WIDTH, ROW, 0)
+            self.display.text(text, 0, LAST_ROW, 1)
         self.display.show()
 
 
