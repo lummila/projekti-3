@@ -10,9 +10,6 @@ SCREEN_HEIGHT = 64
 
 TEXT_HEIGHT = 8
 
-# Bottom breaking point
-BOTTOM_BREAK = int(SCREEN_HEIGHT - SCROLL_ROW / 2)
-
 # One row
 ROW = TEXT_HEIGHT + 2
 # Last row
@@ -29,14 +26,15 @@ class Screen:
         self.scroll_row = 0
 
     def draw_text(self, text):
-        if self.scroll_row < (TEXT_HEIGHT + 2) * 6:
+        if self.scroll_row <= LAST_ROW:
             self.display.text(text, 0, self.scroll_row, 1)
 
             self.scroll_row += ROW
         else:
             self.display.scroll(0, -ROW)
-            self.display.fill_rect(0, LAST_ROW, SCREEN_WIDTH, ROW, 0)
+            self.display.fill_rect(0, LAST_ROW, SCREEN_WIDTH, ROW + 4, 0)
             self.display.text(text, 0, LAST_ROW, 1)
+
         self.display.show()
 
 
