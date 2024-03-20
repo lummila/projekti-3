@@ -10,4 +10,20 @@ SCREEN_HEIGHT = 64
 
 oled = SSD1306_I2C(SCREEN_WIDTH, SCREEN_HEIGHT, i2c)
 
-oled.fill()
+oled.fill(0)
+oled.text("Hello world!", 0, 0, 1)
+oled.show()
+
+num = 0
+
+while True:
+    if button() == 0:
+        num += 1
+        if button() == 0:
+            sleep(0.01)
+
+        print("Painettu'd")
+        oled.fill(0)
+        oled.text(f"Button pressed\n{num} times!", 0, 0, 1)
+        oled.show()
+    sleep(0.05)
